@@ -1,6 +1,6 @@
 local format = {}
 
-local format.round(f,p)
+function format.round(f,p)
   if p == nil then
     if     f < 1     then p = 2
     elseif f < 10    then p = 2
@@ -16,7 +16,7 @@ local format.round(f,p)
   end
 end
 
-local format.formatNumber(n)
+function format.formatNumber(n)
   if     n < 10^3  then n = format.round(n)
   elseif n < 10^6  then n = format.round(n/10^3) .."k" 
   elseif n < 10^9  then n = format.round(n/10^6) .."M"

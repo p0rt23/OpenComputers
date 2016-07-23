@@ -17,11 +17,11 @@ local format.round(f,p)
 end
 
 local format.formatNumber(n)
-  if     n < 10^3  then n = round(n)
-  elseif n < 10^6  then n = round(n/10^3) .."k" 
-  elseif n < 10^9  then n = round(n/10^6) .."M"
-  elseif n < 10^12 then n = round(n/10^9) .."B"
-  else                  n = round(n/10^12).."T"
+  if     n < 10^3  then n = format.round(n)
+  elseif n < 10^6  then n = format.round(n/10^3) .."k" 
+  elseif n < 10^9  then n = format.round(n/10^6) .."M"
+  elseif n < 10^12 then n = format.round(n/10^9) .."B"
+  else                  n = format.round(n/10^12).."T"
   end
   return n
 end

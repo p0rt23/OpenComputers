@@ -11,48 +11,16 @@ local function toRf(joules)
   return joules/2.5
 end
 
-local function getMatrixEnergy()
-  return format.formatNumber(toRf(matrix.getEnergy()))
+local function formatNumber(n)
+  return format.formatNumber(toRf(n))
 end
 
-local function getMatrixMaxEnergy()
-  return format.formatNumber(toRf(matrix.getMaxEnergy()))
-end
-
-local function getMatrixEnergyPercent()
-  return format.formatNumber((matrix.getEnergy()/matrix.getMaxEnergy())*100)
-end
-
-local function getMatrixInputRate()
-  return format.formatNumber(toRf(matrix.getInput()))
-end
-
-local function getMatrixInputPercent()
-  return format.formatNumber((matrix.getInput()/matrix.getTransferCap())*100)
-end
-
-local function getMatrixOutputRate()
-  return format.formatNumber(toRf(matrix.getOutput()))
-end
-
-local function getMatrixOutputPercent()
-  return format.formatNumber((matrix.getOutput()/matrix.getTransferCap())*100)
-end
-
-local function getMatrixTransferCap()
-  return format.formatNumber(toRf(matrix.getTransferCap()))
-end
-
-local function getReactorPlasmaHeatPercent()
-  if reactor.getMaxPlasmaHeat() > 0 then
-    return format.formatNumber((reactor.getPlasmaHeat()/reactor.getMaxPlasmaHeat())*100) 
-  else 
+local function formatPercent(n, max)
+  if max > 0 then
+    return format.formatNumber((n/max)*100)
+  else
     return 0
   end
-end
-
-local function getReactorProducing()
-  return format.formatNumber(toRf(reactor.getProducing()))
 end
 
 local function getReactorStatus()
@@ -78,25 +46,23 @@ local matrixOutputRate, matrixOutputPercent, matrixTransferCap
 local reactorStatus, reactorPlasmaHeatPercent, reactorProducing
 
 local function setEnergyValues()
-  matrixMaxEnergy     = getMatrixMaxEnergy()
-  matrixEnergy        = getMatrixEnergy()
-  matrixEnergyPercent = getMatrixEnergyPercent()
-  matrixInputRate     = getMatrixInputRate()
-  matrixInputPercent  = getMatrixInputPercent()
-  matrixOutputRate    = getMatrixOutputRate()
-  matrixOutputPercent = getMatrixOutputPercent()
-  matrixTransferCap   = getMatrixTransferCap()
+  matrixMaxEnergy     = formatNumber(matrix.getMaxEnergy())
+  matrixEnergy        = formatNumber(matrix.getEnergy())
+  matrixEnergyPercent = formatPercent(matrix.getEnergy(), matrix.getMaxEnergy())
+  matrixInputRate     = formatNumber(matrix.getInput())
+  matrixInputPercent  = formatPercent(matrix.getInput(), matrix.getTransferCap())
+  matrixOutputRate    = formatNumber(matrix.getOutput())
+  matrixOutputPercent = formatPercent(matrix.getOutput(), matrix.getTransferCap())
 
   reactorStatus            = getReactorStatus()
-  reactorPlasmaHeatPercent = getReactorPlasmaHeatPercent()
-  reactorProducing         = getReactorProducing()
+  reactorPlasmaHeatPercent = formatPercent(reactor.getPlasmaHeat(), reactor.getMaxPlasmaHeat())
+  reactorProducing         = formatNumber(reactor.getProducing())
 end
 
 local function printStatus()
   print("Max Capacity:      "..matrixMaxEnergy.." RF")
   print("Current Capacity:  "..matrixEnergy.." RF ("..matrixEnergyPercent.."%)")
   print()
---  print("Max Transfer Rate: "..matrixTransferCap.." RF/t")
   print("Input Rate:        "..matrixInputRate.." RF/t".." ("..matrixInputPercent.."%)")
   print("Output Rate:       "..matrixOutputRate.." RF/t".." ("..matrixOutputPercent.."%)")
   print()
@@ -104,8 +70,6 @@ local function printStatus()
   print("Reactor Heat:      "..reactorPlasmaHeatPercent.."%")
   print("Reactor Power:     "..reactorProducing.." RF/t")
 end
-
-local oldMatrixEnergy, oldMatrixInputRate, oldMatrixOutputRate
 
 local oldW, oldH = gpu.getResolution()
 gpu.setResolution(40, 10)

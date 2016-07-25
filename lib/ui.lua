@@ -7,7 +7,16 @@ local screenWidthOuter, screenHeightOuter
 local screenWidthInner, screenHeightInner
 local screenTopInner, screenLeftInner
 local maxDepth
- 
+
+local function setScreenSettings()
+  screenWidthOuter, screenHeightOuter = gpu.getResolution()
+  screenWidthInner  = screenWidthOuter
+  screenHeightInner = screenHeightOuter
+  screenTopInner    = 1
+  screenLeftInner   = 1
+  maxDepth = gpu.maxDepth()  
+end
+
 local function scaleValue(n1, n1Max, n2Max)
   if n1Max > 0 then
     return math.floor((n2Max*n1)/n1Max)
@@ -142,14 +151,10 @@ end
 function ui.setResolution(w, h)
   local oldW, oldH = gpu.getResolution()
   gpu.setResolution(w, h)
+  setScreenSettings()
   return oldW, oldH
 end
 
-screenWidthOuter, screenHeightOuter = gpu.getResolution()
-screenWidthInner  = screenWidthOuter
-screenHeightInner = screenHeightOuter
-screenTopInner    = 1
-screenLeftInner   = 1
-maxDepth          = gpu.maxDepth()
+setScreenSettings()
  
 return ui

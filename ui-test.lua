@@ -2,8 +2,9 @@ local colors    = require("colors")
 local ui        = require("ui")
 
 local panelCount = 3
+local oldHeight, oldWidth
 
-ui.setResolution(50, 16)
+oldWidth, oldHeight = ui.setResolution(50, 16)
 ui.setScreenPaddingPercent(10, 5, 10, 5)
 local panels = ui.getPanelDimensions(panelCount)
 
@@ -23,3 +24,6 @@ ui.drawPanelText(panels[1], 5, panels[1]["middle"]-1, "Label2 Above Right+5", ni
 
 ui.drawPanelBackground(panels[2], colors.pink, true)
 ui.drawHorizontalPercentageBar(panels[2]["x"], panels[2]["middle"], 1, colors.lightblue, true, colors.gray, true, 80, 100, panels[2]["w"])
+
+os.sleep(5)
+ui.setResolution(oldWidth, oldHeight)

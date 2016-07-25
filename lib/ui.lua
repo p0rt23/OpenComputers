@@ -49,6 +49,16 @@ local function getXAlignCenter(startX, width, val)
   return startX+mid-midStr
 end
 
+local function drawText(x, y, fgColor, isFgIndex, bgColor, isBgIndex)
+  local oldFg = setForeground(fgColor, isFgIndex)
+  local oldBg = setBackground(bgColor, isBgIndex)
+ 
+  gpu.set(x, y, text)
+
+  setForeground(oldFg)
+  setBackground(oldBg)
+end
+
 function ui.clear()
   local w, h = gpu.getResolution()
   gpu.fill(1, 1, w, h, " ")
@@ -101,10 +111,7 @@ function ui.drawHorizontalPercentageBar(x, y, height, fgColor, isFgIndex, bgColo
   setBackground(oldColor)
 end
 
-function ui.drawText(panel, x, y, text, align, fgColor, isFgIndex, bgColor, isBgIndex)
-  local oldFg = setForeground(fgColor, isFgIndex)
-  local oldBg = setBackground(bgColor, isBgIndex)
-  
+function ui.drawPanelText(panel, x, y, text, align, fgColor, isFgIndex, bgColor, isBgIndex)
   if align == "left" then
     x = panel["x"]
   elseif align == "right" then
@@ -115,12 +122,29 @@ function ui.drawText(panel, x, y, text, align, fgColor, isFgIndex, bgColor, isBg
     x = x or 1
   end
 
-  gpu.set(x, y, text)
-
-  setForeground(oldFg)
-  setBackground(oldBg)
+  drawText(x, y, fgColor, isFgIndex, bgColor, isBgIndex)
 end
  
+function ui.drawScreenText(x, y, text, align, fgColor, isFgIndex, bgColor, isBgIndex)
+  if align == "left" then
+    x = 1
+  elseif align == "right" then
+    x = getXAlignRight(1+screenWidthOuter, text)
+  elseif align == "center" then
+    x = getXAlignCenter(1, screenWidthOuter, text)
+  else
+    x = x or 1
+  end
+ 
+  drawText(x, y, fgColor, isFgIndex, bgColor, isBgIndex)
+end
+
+function ui.setResolution(w, h)
+  local oldW, oldH = gpu.getResolution()
+  gpu.setResolution(w, h)
+  return oldW, oldH
+end
+
 screenWidthOuter, screenHeightOuter = gpu.getResolution()
 screenWidthInner  = screenWidthOuter
 screenHeightInner = screenHeightOuter

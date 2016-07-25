@@ -17,12 +17,36 @@ end
 
 local function setBackground(color, isIndex, monoColor)
   monoColor = monoColor or 0x000000
+  isIndex   = isIndex   or false
   if maxDepth < 4 then
     color   = monoColor
     isIndex = false
   end
   local oldColor = gpu.setBackground(color, isIndex)
   return oldColor
+end
+
+local function setForeground(color, isIndex, monoColor)
+  monoColor = monoColor or 0xFFFFFF
+  isIndex   = isIndex   or false
+  if maxDepth < 4 then
+    color   = monoColor
+    isIndex = false
+  end
+  local oldColor = gpu.setForeground(color, isIndex)
+  return oldColor
+end
+
+local function getXAlignRight(endX, val)
+  local len = string.len(val)
+  return endX-len
+end
+
+local function getXAlignCenter(startX, width, val)
+  local len = string.len(val)
+  local mid = math.floor(width/2)
+  local midStr = math.floor(len/2)
+  return startX+mid-midStr
 end
 
 function ui.clear()
@@ -62,7 +86,7 @@ end
 function ui.drawPanelBackground(panel, color, isIndex)
   local oldColor = setBackground(color, isIndex)
   gpu.fill(panel["x"], panel["y"], panel["w"], panel["h"], " ")
-  gpu.setBackground(oldColor)
+  setBackground(oldColor)
 end
  
 function ui.drawHorizontalPercentageBar(x, y, height, fgColor, isFgIndex, bgColor, isBgIndex, val, maxVal, width)
@@ -74,9 +98,28 @@ function ui.drawHorizontalPercentageBar(x, y, height, fgColor, isFgIndex, bgColo
   setBackground(fgColor, isFgIndex, 0xFFFFFF)
   gpu.fill(x, y, innerWidth, height, " ")
  
-  gpu.setBackground(oldColor)
+  setBackground(oldColor)
 end
- 
+
+function ui.drawText(panel, x, y, text, align, fgColor, isFgIndex, bgColor, isBgIndex)
+  local oldFg = setForeground(fgColor, isFgIndex)
+  local oldBg = setBackground(bgColor, isBgIndex)
+  
+  if align == "left" then
+    x = panel["x"]
+  elseif align == "right" then
+    x = getXAlignRight(panel["x"]+panel["w"], text)
+  elseif align == "center" then
+    x = getXAlignCenter(panel["x"], panel["w"], text)
+  else
+    x = x or 1
+  end
+
+  gpu.set(x, y, text)
+
+  setForeground(oldFg)
+  setBackground(oldBg)
+end
  
 screenWidthOuter, screenHeightOuter = gpu.getResolution()
 screenWidthInner  = screenWidthOuter

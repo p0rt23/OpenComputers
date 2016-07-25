@@ -49,7 +49,7 @@ local function getXAlignCenter(startX, width, val)
   return startX+mid-midStr
 end
 
-local function drawText(x, y, fgColor, isFgIndex, bgColor, isBgIndex)
+local function drawText(x, y, text, fgColor, isFgIndex, bgColor, isBgIndex)
   local oldFg = setForeground(fgColor, isFgIndex)
   local oldBg = setBackground(bgColor, isBgIndex)
  
@@ -122,7 +122,7 @@ function ui.drawPanelText(panel, x, y, text, align, fgColor, isFgIndex, bgColor,
     x = x or 1
   end
 
-  drawText(x, y, fgColor, isFgIndex, bgColor, isBgIndex)
+  drawText(x, y, text, fgColor, isFgIndex, bgColor, isBgIndex)
 end
  
 function ui.drawScreenText(x, y, text, align, fgColor, isFgIndex, bgColor, isBgIndex)
@@ -136,7 +136,7 @@ function ui.drawScreenText(x, y, text, align, fgColor, isFgIndex, bgColor, isBgI
     x = x or 1
   end
  
-  drawText(x, y, fgColor, isFgIndex, bgColor, isBgIndex)
+  drawText(x, y, text, fgColor, isFgIndex, bgColor, isBgIndex)
 end
 
 function ui.setResolution(w, h)

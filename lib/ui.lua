@@ -18,6 +18,10 @@ local function setScreenSettings()
 end
 
 local function scaleValue(n1, n1Max, n2Max)
+  n1    = tonumber(n1)    or 0
+  n1Max = tonumber(n1Max) or 0
+  n2Max = tonumber(n2Max) or 0
+
   if n1Max > 0 then
     return math.floor((n2Max*n1)/n1Max)
   end
@@ -25,6 +29,7 @@ local function scaleValue(n1, n1Max, n2Max)
 end  
 
 local function setBackground(color, isIndex, monoColor)
+  color     = color     or 0x000000
   monoColor = monoColor or 0x000000
   isIndex   = isIndex   or false
   if maxDepth < 4 then
@@ -36,6 +41,7 @@ local function setBackground(color, isIndex, monoColor)
 end
 
 local function setForeground(color, isIndex, monoColor)
+  color     = color     or 0xFFFFFF
   monoColor = monoColor or 0xFFFFFF
   isIndex   = isIndex   or false
   if maxDepth < 4 then
@@ -150,7 +156,9 @@ end
 
 function ui.setResolution(w, h)
   local oldW, oldH = gpu.getResolution()
-  gpu.setResolution(w, h)
+  if (oldW >= w) and (oldH >= h) then
+    gpu.setResolution(w, h)
+  end
   setScreenSettings()
   return oldW, oldH
 end

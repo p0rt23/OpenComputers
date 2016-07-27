@@ -6,7 +6,6 @@ local colors    = require("colors")
 
 local function toRf(joules)
   joules = tonumber(joules) or 0 
-
   return joules/2.5
 end
 
@@ -34,7 +33,7 @@ local function getInductionMatrixValues()
     matrix["energy"]      = compMatrix.getEnergy()
     matrix["input"]       = compMatrix.getInput()
     matrix["output"]      = compMatrix.getOutput()
-    matrix["transferCap"  = compMatrix.getTransferCap()
+    matrix["transferCap"] = compMatrix.getTransferCap()
   end)
 
   return matrix
@@ -63,15 +62,12 @@ end
 local function getScaledTransferCap(input, output, cap)
   input  = tonumber(input)  or 0
   output = tonumber(output) or 0
-  cap    = tonumber(cap)    or 0
+  cap    = tonumber(cap)    or 0  
 
-  if (output < cap/2) and (input < cap/2) then
-    if output < input then 
-      cap = input*1.25
-    else
-      cap = output*1.25
-    end
-  end    
+  if (output < cap/25) and (input < cap/25) then
+    cap = cap/25
+  end
+
   return cap
 end
 
@@ -119,9 +115,9 @@ local function drawStatus(status)
   ui.drawPanelText(panels[1], nil, panels[1]["middle"], "Max Rate: "..status["displayTransferCap"].." RF/t", "right")
   ui.drawPanelText(panels[1], nil, panels[1]["middle"]+2, "Output Rate: "..status["displayOutput"].." RF/t", "left")
 
+  ui.drawPanelText(panels[2], nil, panels[2]["middle"]-1, "Reactor Status:  "..status["reactorStatus"], "left")
   if status["reactor"]["isIgnited"] then
-    ui.drawPanelText(panels[2], nil, panels[2]["middle"]-1, "Reactor Status:  "..status["reactorStatus"], "left")
-    ui.drawPanelText(panels[2], nil, panels[2]["middle"]+1, "Reactor Production: "..status["displayProducing"].." RF/t", "left")
+    ui.drawPanelText(panels[2], nil, panels[2]["middle"]+1, "Reactor Production: "..status["displayProducing"].." RF/t", "left")  
   end
 end
 

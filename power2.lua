@@ -47,7 +47,7 @@ local function getReactorLogicAdapterValues()
     reactor["isIgnited"]     = compReactor.isIgnited()
     reactor["plasmaHeat"]    = compReactor.getPlasmaHeat()
     reactor["maxPlasmaHeat"] = compReactor.getMaxPlasmaHeat()
-    matrix["producing"]      = compMatrix.getProducing()
+    reactor["producing"]     = compReactor.getProducing()
   end)
 
   return reactor

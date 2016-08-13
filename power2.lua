@@ -55,7 +55,7 @@ end
 
 local function powerReactorOff()
     local status, err = pcall(function ()
-      reactor.setInjectionRate(0)
+      component.reactor_logic_adapter.setInjectionRate(0)
     end)
 end
 
